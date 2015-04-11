@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 /**
  * Created by maany on 4/11/15.
  */
-public class QStandingOvation extends Template {
+public class QStandingOvation extends Template<Integer> {
     /* Variable declaration*/
     private static int smax;
     private int contSum;
@@ -16,20 +16,22 @@ public class QStandingOvation extends Template {
     }
 
     public static void main(String args[]) {
-        input = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\standing_ovation.txt";
-        output = "";
+        input = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\A-small-attempt0.in";
+        output = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\standing_ovation_output.out";
         QStandingOvation problem = new QStandingOvation();
         try {
-            problem.initInput();
+            problem.initInputOutput();
 
             for (currentTestCase = 1; currentTestCase <= noOfTestCases; currentTestCase++) {
                 problem.readNextTestCase();
-                System.out.println("Case #" + currentTestCase + ": " + problem.requiredPeople);
+                problem.caseConsoleOutput(problem.requiredPeople);
+                problem.caseFileOutput(problem.requiredPeople);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
             in.close();
+            out.close();
         }
     }
 

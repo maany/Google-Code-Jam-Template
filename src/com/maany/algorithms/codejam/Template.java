@@ -9,17 +9,18 @@ import java.util.Scanner;
  * use when first line of input contains no of test cases T
  * Created by Maany on 4/11/15.
  */
-public abstract class Template {
-    static Scanner in;
-    static String input;
-    static String output;
-    static PrintWriter out;
-    static int currentTestCase = 0;
-    static int noOfTestCases = 0;
+public abstract class Template<T> {
+    public static Scanner in;
+    public static String input;
+    public static String output;
+    public static PrintWriter out;
+    public static int currentTestCase = 0;
+    public static int noOfTestCases = 0;
 
-    public void initInput() throws FileNotFoundException {
+    public void initInputOutput() throws FileNotFoundException {
         in = new Scanner(new FileReader(input));
         noOfTestCases = in.nextInt();
+        out = new PrintWriter(output);
         System.out.println("No of Test Cases : " + noOfTestCases); //TODO comment out output
 
     }
@@ -37,7 +38,7 @@ public abstract class Template {
      */
     public int getData() {
         try {
-            initInput();
+            initInputOutput();
             readNextTestCase();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -45,7 +46,11 @@ public abstract class Template {
         return currentTestCase;
     }
 
-    public void caseOutput() {
+    public void caseConsoleOutput(T value) {
+        System.out.println("Case #" + currentTestCase + ": " + value);
+    }
 
+    public void caseFileOutput(T value) {
+        out.println("Case #" + currentTestCase + ": " + value);
     }
 }
