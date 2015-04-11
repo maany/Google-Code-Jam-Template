@@ -21,7 +21,7 @@ public abstract class Template<T> {
         in = new Scanner(new FileReader(input));
         noOfTestCases = in.nextInt();
         out = new PrintWriter(output);
-        System.out.println("No of Test Cases : " + noOfTestCases); //TODO comment out output
+        //System.out.println("No of Test Cases : " + noOfTestCases); //TODO comment out output
 
     }
 

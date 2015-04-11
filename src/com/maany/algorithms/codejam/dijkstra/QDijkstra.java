@@ -18,6 +18,7 @@ public class QDijkstra extends Template<String> {
         input = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\dijkstra\\dijkstra_input.txt";
         output = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\standing_ovation_output.out";
         QDijkstra problem = new QDijkstra();
+        Quarternion quarternion = new Quarternion();
         try {
             problem.initInputOutput();
             for (currentTestCase = 1; currentTestCase <= noOfTestCases; currentTestCase++) {
@@ -49,54 +50,62 @@ public class QDijkstra extends Template<String> {
         for (int i = 0; i < L; i++) {
             caseString += base;
         }
-        System.out.println("Case String : " + caseString); //TODO remove
+        //System.out.println("Case String : " + caseString); //TODO remove
         // populate the iList and kList
-        Quarternion.Values cumulativeIValue = charToValuesMapper(caseString.charAt(0));
-        Quarternion.Values cumulativeKValue = charToValuesMapper(caseString.charAt(caseString.length() - 1));
-        if (cumulativeIValue == Quarternion.Values.i && cumulativeIValue.getSign() == 1)
+        Quarternion.QuarternionValueWrapper cumulativeIValue = charToValuesMapper(caseString.charAt(0));
+        Quarternion.QuarternionValueWrapper cumulativeKValue = charToValuesMapper(caseString.charAt(caseString.length() - 1));
+        if (cumulativeIValue == Quarternion.plusI)
             iList.add(0);
-        if (cumulativeKValue == Quarternion.Values.k && cumulativeIValue.getSign() == 1)
+        if (cumulativeKValue == Quarternion.plusK)
             kList.add(caseString.length() - 1);
-        for (int i = 1, k = caseString.length() - 2; i < caseString.length() && k >= 0; i++, k--) {
+        for (int i = 1, k = caseString.length() - 2; (i < caseString.length() && k >= 0); i++, k--) {
             cumulativeIValue = Quarternion.multiply(cumulativeIValue, charToValuesMapper(caseString.charAt(i)));
-            cumulativeKValue = Quarternion.multiply(cumulativeKValue, charToValuesMapper(caseString.charAt(k)));
-            if (cumulativeIValue == Quarternion.Values.i && cumulativeIValue.getSign() == 1)
+            cumulativeKValue = Quarternion.multiply(charToValuesMapper(caseString.charAt(k)), cumulativeKValue);
+            if (cumulativeIValue == Quarternion.plusI)
                 iList.add(i);
-            if (cumulativeKValue == Quarternion.Values.k && cumulativeIValue.getSign() == 1)
+            if (cumulativeKValue == Quarternion.plusK)
                 kList.add(k);
         }
         /* find if the remaining substring equates to j*/
         for (int l = 0; l < iList.size(); l++)
             for (int m = 0; m < kList.size(); m++) {
-                String currentString = caseString.substring(iList.get(l) + 1, kList.get(m));
-                if (getSubStringValue(currentString) == Quarternion.Values.j) {
-                    result = "YES";
-                    return;
+                if (iList.get(l) + 1 < kList.get(m)) {
+
+                    String currentString = caseString.substring(iList.get(l) + 1, kList.get(m));
+                    //System.out.println("Current substring : " + currentString + " Case : " + currentTestCase); //TODO remove
+                    if (getSubStringValue(currentString) == Quarternion.plusJ) {
+                        result = "YES";
+                        return;
+                    }
                 }
             }
+
+
     }
 
-    private Quarternion.Values charToValuesMapper(char ch) {
-        Quarternion.Values value = null;
+    private Quarternion.QuarternionValueWrapper charToValuesMapper(char ch) {
+        Quarternion.QuarternionValueWrapper value = null;
         switch (ch) {
             case '1':
-                value = Quarternion.Values.one;
+                value = Quarternion.plusOne;
                 break;
             case 'i':
-                value = Quarternion.Values.i;
+                value = Quarternion.plusI;
                 break;
             case 'j':
-                value = Quarternion.Values.j;
+                value = Quarternion.plusJ;
                 break;
             case 'k':
-                value = Quarternion.Values.k;
+                value = Quarternion.plusK;
                 break;
         }
         return value;
     }
 
-    private Quarternion.Values getSubStringValue(String string) {
-        Quarternion.Values value = charToValuesMapper(string.charAt(0));
+    private Quarternion.QuarternionValueWrapper getSubStringValue(String string) {
+        if (string.length() == 0)
+            return Quarternion.plusOne;
+        Quarternion.QuarternionValueWrapper value = charToValuesMapper(string.charAt(0));
         for (int i = 1; i < string.length(); i++) {
             value = Quarternion.multiply(value, charToValuesMapper(string.charAt(i)));
         }
