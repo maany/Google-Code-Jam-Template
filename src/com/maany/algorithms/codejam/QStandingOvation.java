@@ -38,9 +38,13 @@ public class QStandingOvation extends Template {
         smax = in.nextInt();
         contSum = 0;
         requiredPeople = 0;
-
+        String currentPeople = in.next();
+        int[] noOfPeoples = new int[currentPeople.length()];
+        for (int i = 0; i < currentPeople.length(); i++) {
+            noOfPeoples[i] = currentPeople.charAt(i) - '0';
+        }
         for (int i = 0; i <= smax; i++) {
-            int noOfPeople = in.nextInt();
+            int noOfPeople = noOfPeoples[i];
             if (i > contSum && noOfPeople != 0)
                 requiredPeople += i - contSum;
             contSum += noOfPeople + requiredPeople;
