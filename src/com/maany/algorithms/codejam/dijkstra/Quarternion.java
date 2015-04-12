@@ -8,10 +8,10 @@ public class Quarternion {
         i, k, j, one;
     }
 
-    public static QuarternionValueWrapper minusOne, minusI, minusJ, minusK, plusOne, plusI, plusJ, plusK;
-    private static QuarternionValueWrapper[][] table = new QuarternionValueWrapper[4][4];
+    public QuarternionValueWrapper minusOne, minusI, minusJ, minusK, plusOne, plusI, plusJ, plusK;
+    private QuarternionValueWrapper[][] table = new QuarternionValueWrapper[4][4];
 
-    static {
+    public Quarternion() {
         minusI = new QuarternionValueWrapper(Values.i, -1);
         minusJ = new QuarternionValueWrapper(Values.j, -1);
         minusK = new QuarternionValueWrapper(Values.k, -1);
@@ -38,7 +38,7 @@ public class Quarternion {
         table[3][3] = minusOne;
     }
 
-    private static int mapValueToDataSet(Values v) {
+    private int mapValueToDataSet(Values v) {
         int x = -1;
         switch (v) {
             case i:
@@ -56,7 +56,7 @@ public class Quarternion {
         return x;
     }
 
-    public static QuarternionValueWrapper multiply(QuarternionValueWrapper v1, QuarternionValueWrapper v2) {
+    public QuarternionValueWrapper multiply(QuarternionValueWrapper v1, QuarternionValueWrapper v2) {
         int x, y;
         x = mapValueToDataSet(v1.getValue());
         y = mapValueToDataSet(v2.getValue());
@@ -65,7 +65,7 @@ public class Quarternion {
         return table[x][y];
     }
 
-    static class QuarternionValueWrapper {
+    class QuarternionValueWrapper {
         private Values value;
         private int sign;
 

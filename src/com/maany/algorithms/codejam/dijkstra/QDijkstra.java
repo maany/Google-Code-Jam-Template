@@ -10,36 +10,52 @@ import java.util.ArrayList;
  */
 public class QDijkstra extends Template<String> {
     String result;
-    QDijkstra problem;
-    ArrayList<Integer> iList = new ArrayList<Integer>();
-    ArrayList<Integer> kList = new ArrayList<Integer>();
+    Quarternion quarternion;
 
     public static void main(String[] args) {
-        input = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\dijkstra\\dijkstra_input.txt";
-        output = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\standing_ovation_output.out";
-        QDijkstra problem = new QDijkstra();
-        Quarternion quarternion = new Quarternion();
+        input = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\dijkstra\\C-small-attempt0.in";
+        output = "E:\\Projects\\Google Code Jam\\src\\com\\maany\\algorithms\\codejam\\dijkstra\\djikstra.out";
+        final QDijkstra problem = new QDijkstra();
+        problem.quarternion = new Quarternion();
         try {
             problem.initInputOutput();
-            for (currentTestCase = 1; currentTestCase <= noOfTestCases; currentTestCase++) {
-                problem.readNextTestCase();
-                problem.caseConsoleOutput(problem.result);
-            }
+            Runnable run1 = new Runnable() {
+                @Override
+                public void run() {
+                    for (int currentTestCase = 1; currentTestCase <= 25; currentTestCase++) {
+                        problem.readNextTestCase();
+                        problem.caseFileOutput(problem.result);
+                    }
+                }
+            };
+            Runnable run2 = new Runnable() {
+                @Override
+                public void run() {
+                    for (int currentTestCase = 26; currentTestCase <= 50; currentTestCase++) {
+                        problem.readNextTestCase();
+                        System.out.println("Case #" + currentTestCase + ": " + problem.result);
+                        //problem.caseFileOutput(problem.result);
+                    }
+                }
+            };
+            new Thread(run1).start();
+            new Thread(run2).start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            in.close();
-            out.close();
+            //in.close();
+            // out.close();
         }
     }
 
     @Override
     public void readNextTestCase() {
         result = "NO";
+        quarternion = new Quarternion();
         int K = in.nextInt();
         int L = in.nextInt();
-        int flag = 0;
-        System.out.println();
+        ArrayList<Integer> iList = new ArrayList<Integer>();
+        ArrayList<Integer> kList = new ArrayList<Integer>();
         if (K * L < 3) {
             in.next();
             return;
@@ -54,16 +70,16 @@ public class QDijkstra extends Template<String> {
         // populate the iList and kList
         Quarternion.QuarternionValueWrapper cumulativeIValue = charToValuesMapper(caseString.charAt(0));
         Quarternion.QuarternionValueWrapper cumulativeKValue = charToValuesMapper(caseString.charAt(caseString.length() - 1));
-        if (cumulativeIValue == Quarternion.plusI)
+        if (cumulativeIValue == quarternion.plusI)
             iList.add(0);
-        if (cumulativeKValue == Quarternion.plusK)
+        if (cumulativeKValue == quarternion.plusK)
             kList.add(caseString.length() - 1);
         for (int i = 1, k = caseString.length() - 2; (i < caseString.length() && k >= 0); i++, k--) {
-            cumulativeIValue = Quarternion.multiply(cumulativeIValue, charToValuesMapper(caseString.charAt(i)));
-            cumulativeKValue = Quarternion.multiply(charToValuesMapper(caseString.charAt(k)), cumulativeKValue);
-            if (cumulativeIValue == Quarternion.plusI)
+            cumulativeIValue = quarternion.multiply(cumulativeIValue, charToValuesMapper(caseString.charAt(i)));
+            cumulativeKValue = quarternion.multiply(charToValuesMapper(caseString.charAt(k)), cumulativeKValue);
+            if (cumulativeIValue == quarternion.plusI)
                 iList.add(i);
-            if (cumulativeKValue == Quarternion.plusK)
+            if (cumulativeKValue == quarternion.plusK)
                 kList.add(k);
         }
         /* find if the remaining substring equates to j*/
@@ -73,7 +89,7 @@ public class QDijkstra extends Template<String> {
 
                     String currentString = caseString.substring(iList.get(l) + 1, kList.get(m));
                     //System.out.println("Current substring : " + currentString + " Case : " + currentTestCase); //TODO remove
-                    if (getSubStringValue(currentString) == Quarternion.plusJ) {
+                    if (getSubStringValue(currentString) == quarternion.plusJ) {
                         result = "YES";
                         return;
                     }
@@ -87,16 +103,16 @@ public class QDijkstra extends Template<String> {
         Quarternion.QuarternionValueWrapper value = null;
         switch (ch) {
             case '1':
-                value = Quarternion.plusOne;
+                value = quarternion.plusOne;
                 break;
             case 'i':
-                value = Quarternion.plusI;
+                value = quarternion.plusI;
                 break;
             case 'j':
-                value = Quarternion.plusJ;
+                value = quarternion.plusJ;
                 break;
             case 'k':
-                value = Quarternion.plusK;
+                value = quarternion.plusK;
                 break;
         }
         return value;
@@ -104,10 +120,10 @@ public class QDijkstra extends Template<String> {
 
     private Quarternion.QuarternionValueWrapper getSubStringValue(String string) {
         if (string.length() == 0)
-            return Quarternion.plusOne;
+            return quarternion.plusOne;
         Quarternion.QuarternionValueWrapper value = charToValuesMapper(string.charAt(0));
         for (int i = 1; i < string.length(); i++) {
-            value = Quarternion.multiply(value, charToValuesMapper(string.charAt(i)));
+            value = quarternion.multiply(value, charToValuesMapper(string.charAt(i)));
         }
         return value;
     }
